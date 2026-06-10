@@ -1,0 +1,9 @@
+include(FindProtobuf)
+if(Protobuf_FOUND)
+  set(Protobuf_CONFIG_FOUND TRUE)
+  if(TARGET protobuf::libprotobuf AND NOT TARGET protobuf::protobuf)
+    add_library(protobuf::protobuf INTERFACE IMPORTED)
+    target_link_libraries(protobuf::protobuf INTERFACE protobuf::libprotobuf)
+  endif()
+endif()
+

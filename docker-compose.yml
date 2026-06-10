@@ -1,0 +1,9 @@
+services:
+  test-env:
+    build: .
+    image: monitor-test-env
+    container_name: my_test_container
+    volumes:
+      - .:/workspace
+    stdin_open: true
+    tty: true
