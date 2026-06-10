@@ -17,4 +17,6 @@ venv.bak/
 build/
 *.pyc
 .DS_Store
+monitor_pb2.py
+monitor_pb2_grpc.py
 

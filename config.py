@@ -18,5 +18,8 @@ SERVER_STARTUP_TIMEOUT = float(os.getenv("SERVER_STARTUP_TIMEOUT", "5.0"))
 # gRPC server application relative path
 APP_SERVER_PATH = os.getenv("APP_SERVER_PATH", "/build/grpc_udp_monitor")
 # Work directory path
-WORKDIR = os.getenv("WORKDIR", ".")
+BASEDIR = os.path.dirname(os.path.abspath(__file__))
+WORKDIR = os.getenv("WORKDIR", BASEDIR)
+
+# GRPC_SERVER_ADDRESS, GRPC_SERVER_PORT, UDP_LISTENER_ADDRESS, UDP_LISTENER_PORT, SERVER_STARTUP_TIMEOUT, APP_SERVER_PATH, WORKDIR 
 
