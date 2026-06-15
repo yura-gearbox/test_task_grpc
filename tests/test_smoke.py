@@ -39,14 +39,13 @@ def test_tc_lc_server_init(raw_app_process):
         
 @pytest.mark.smoke
 @pytest.mark.parametrize(
-    "terminate_signal, test_id",
+    'terminate_signal, test_id',
     [
-        pytest.param(signal.SIGINT, "TC-LC-02", marks=pytest.mark.xfail(reason="Bug: SIGINT returns exit code -2", strict=False)),
-        pytest.param(signal.SIGTERM, "TC-LC-03", marks=pytest.mark.xfail(reason="Bug: SIGTERM returns exit code -15", strict=False))
+        (signal.SIGINT, 'TC-LC-02'),
+        (signal.SIGTERM, 'TC-LC-03')
     ],
-    ids=["SIGINT", "SIGTERM"]
+    ids=['SIGINT', 'SIGTERM']
 )
-@pytest.mark.xfail(reason="Known bug", strict=False)
 def test_tc_lc_graceful_shutdown(raw_app_process, terminate_signal, test_id):
     """
     Параметризованный тест для верификации корректного завершения работы:
@@ -58,9 +57,9 @@ def test_tc_lc_graceful_shutdown(raw_app_process, terminate_signal, test_id):
     try:
         exit_code = raw_app_process.wait(timeout=SERVER_TERMINATE_TIMEOUT)
     except subprocess.TimeoutExpired:
-        pytest.fail(f"[{test_id}] Приложение проигнорировало сигнал {terminate_signal.name} и зависло")
+        pytest.fail(f'[{test_id}] Приложение проигнорировало сигнал {terminate_signal.name} и зависло')
         
-    assert exit_code == 0, f"[{test_id}] Приложение завершилось с ошибкой. Exit code: {exit_code}"
+    assert exit_code == 0, f'[{test_id}] Приложение завершилось с ошибкой. Exit code: {exit_code}'
     
     # проверка освобождения дескрипторов TCP и UDP
     for port, sock_type in [(GRPC_SERVER_PORT, socket.SOCK_STREAM), (UDP_LISTENER_PORT, socket.SOCK_DGRAM)]:
@@ -68,5 +67,5 @@ def test_tc_lc_graceful_shutdown(raw_app_process, terminate_signal, test_id):
             try:
                 sock.bind(('127.0.0.1', port))
             except OSError:
-                pytest.fail(f"[{test_id}] Системный порт {port} не был освобожден после {terminate_signal.name}")
+                pytest.fail(f'[{test_id}] Системный порт {port} не был освобожден после {terminate_signal.name}')
 

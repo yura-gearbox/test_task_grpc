@@ -1,8 +1,11 @@
 import subprocess
 import time
 import signal
-import pytest
+import socket
+import contextlib
 import grpc
+import pytest
+
 import monitor_pb2
 import monitor_pb2_grpc
 
@@ -61,3 +64,20 @@ def grpc_stub(grpc_server):
 
     channel.close()
 
+@pytest.fixture
+def send_udp():
+    def _send(payloads, delay_sec = 0.0, host = UDP_LISTENER_ADDRESS, port = UDP_LISTENER_PORT):
+        """
+        :param payloads: Список пакетов для отправки
+        :param delay_sec: Задержка между пакетами в секундах
+        """
+        if isinstance(payloads, bytes):
+            payloads = [payloads]
+            
+        with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as sock:
+            for packet in payloads:
+                sock.sendto(packet, (host, port))
+                if delay_sec > 0.0:
+                    time.sleep(delay_sec)
+    
+    return _send
